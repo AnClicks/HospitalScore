@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const ObjectId = mongoose.ObjectId;
 
-const User = new Schema({
+const Users = new Schema({
     userId:ObjectId,
     email:{
         type:String,
@@ -16,12 +16,12 @@ const User = new Schema({
         require:true,
         trim:true
     },
-    firstName:{
+    firstname:{
         type:String,
         required:true,
         trim:true
     },
-    middleName:{
+    middlename:{
         type:String,
         trim:true
     },
@@ -46,12 +46,12 @@ const Admin = new Schema({
         required:true,
         trim:true
     },
-    firstName:{
+    firstname:{
         type:String,
         required:true,
         trim:true
     },
-    middleName:{
+    middlename:{
         type:String,
         trim:true
     },
@@ -63,13 +63,17 @@ const Admin = new Schema({
     hospitalList:[
         {
             type:mongoose.Schema.Types.ObjectId,
-            ref:"Hospital"                                  ////export this table
+            ref:"Hospitals"                                  ////export this table
         }
     ]
 })
 
 const Hospitals = new Schema ({
     hostpitalId:ObjectId,
+    adminId:{
+        type:String,
+        required:true
+    },
     hospitalName:{
         type:String,
         require:true
@@ -97,12 +101,6 @@ const Hospitals = new Schema ({
     userReviews:[
                                         /// Will use this object and convert into CSV file and input as model
         {
-            // username:{
-            //     type:String,
-            //     required:true,
-            //     trim:true
-            // },
-            // userReview:String,
             type:mongoose.Schema.Types.ObjectId,
             ref:'Review'                  /// export this table
 
@@ -117,7 +115,7 @@ const Reviews = new Schema ({
         type:String,
         required:true,
     },
-    reveiw:
+    review:
         {
             answer:[],
             required:true
@@ -129,3 +127,24 @@ const Reviews = new Schema ({
 })
 
 //make hospital model and export all model
+const HospitalRating= new Schema({
+    hospitalRatingId:ObjectId,
+    hospitalId:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Hospitals"
+    },
+    rating:Number
+})
+ const UserModel = mongoose.model('user',Users);
+ const AdminModel = mongoose.model('admin',Admin);
+ const HospitalModel = mongoose.model('hospital',Hospitals);
+ const ReviewModel = mongoose.model('review',Reviews);
+ const HospitalRatingModel = mongoose.model('hospitalrating',HospitalRating);
+ 
+ module.exports={
+    UserModel,
+    AdminModel,
+    HospitalModel,
+    ReviewModel,
+    HospitalRatingModel,
+ }

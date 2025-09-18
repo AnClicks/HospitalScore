@@ -1,5 +1,8 @@
 const express = require("express");
-const {PORT} = require("./config")
+const {PORT,MONGO_URI} = require("./config");
+const { default: mongoose } = require("mongoose");
+const { userRouter } = require("./routes/user");
+const { adminRouter } = require("./routes/admin")
 
 // console.log(PORT)
 const app = express();
@@ -15,14 +18,25 @@ app.get("/",(req,res)=>{
 //for body parser in all routes
 app.use(express.json());
 
-app.use("/api/v1/user",userRoutes);
-app.use("/api/v1/admin",adminRoutes);
+app.use("/api/v1/user",userRouter);
+app.use("/api/v1/admin",adminRouter);
+
+async function main(){
+    try{
+        await mongoose.connect(MONGO_URI)
+        app.listen(PORT,()=>{
+            console.log("Database Connected")
+            console.log(`The backend is running on http://localhost:${3000}/`);
+        })
+    }
+    catch(err){
+        console.log("Unable to connect to the Database.")
+    }
+}
+main()
 
 
 
 
 
 
-app.listen(PORT,()=>{
-    console.log(`The backend is running on http://localhost:${3000}/`);
-})
